@@ -5,54 +5,53 @@
  * Last Modified:
  * Version:			Gamma
  * Description:
- *     For the general purpose
- *     if you wish to add additional functionalities to the class,
- *     the prototype/__proto__ can be used.
+ * 		For the general purpose
+ *		if you wish to add additional functionalities to the class,
+ *		the prototype/__proto__ can be used.
  ***************************************************************/
 
 class Entity {
 	// constructor
-    // * argument must be an object (key/value pair)
-   
+	// * argument must be an object (key/value pair)
+	
 	constructor (props) {
-	    this.setProps (props);
-    }
+		this.setProps (props);
+	}
     
-    // anything is acceptable as long is the argument is a key/value pair
-    setProps (props) {
-    	if ((typeof(props)).toLowerCase() == "object") {
+	// anything is acceptable as long is the argument is a key/value pair
+	setProps (props) {
+		if ((typeof(props)).toLowerCase() == "object") {
 			for (let key in props) {
-        		this[key] = props[key];
-        	}
-        }
-    }
+				this[key] = props[key];
+			}
+		}
+	}
+
+	// returns property list
+	getPropertyNames () {
+		return Object.getOwnPropertyNames(this);
+	}
     
-    // returns property list
-    getPropertyNames () {
-    	return Object.getOwnPropertyNames(this);
-    }
-    
-    // get value list
-    getValues () {
-    	return Object.values(this);
-    }
-    
-    // make an Ajax call and get all the data
+	// get value list
+	getValues () {
+		return Object.values(this);
+	}
+
+	// make an Ajax call and get all the data
 	// returns a promise object which can be used by the caller
-    static makeGetReq(entityDataURI, wantXML) {
-    	var promise = new Promise( (resolve, reject) => {
-        	var xhr = new XMLHttpRequest();
-            xhr.open('get', entityDataURI, true);
+	static makeGetReq(entityDataURI, wantXML) {
+		var promise = new Promise( (resolve, reject) => {
+			var xhr = new XMLHttpRequest();
+			xhr.open('get', entityDataURI, true);
 			xhr.send(null);            
 
 			xhr.onreadystatechange = () => { 
 				Entity.stateChangeHandler (xhr, wantXML, resolve, reject);
 			};
+		});
 
-        });
-
-        return promise;
-    }
+		return promise;
+	}
 
 	// post call
 	// post data will get processed on server-side
@@ -61,7 +60,6 @@ class Entity {
 		formData.append("req_type", reqType);
 		// even a scalar data can be stringified
 		formData.append("data_content", JSON.stringify(data));
-
 
 		var promise = new Promise( (resolve, reject) => {
 			var xhr = new XMLHttpRequest();
@@ -89,4 +87,3 @@ class Entity {
 		}
 	}
 }
-
