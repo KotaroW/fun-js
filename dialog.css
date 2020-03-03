@@ -1,0 +1,41 @@
+/**********************************************************************
+ * this stylesheet goes with dialog.js
+ * CSS namespace test
+ * if we specify a namespace at an upper level of DOM structure ....
+ **********************************************************************/
+ 
+     
+     div[data-namespace="dialog-mask"] {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    div[data-namespace="dialog-mask"] > div {
+        background: #369;
+        color: #fff;
+        padding: 2em;
+    }
+    div[data-namespace="dialog-mask"] button { 
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        -o-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+        border: none;
+        font: inherit;
+        padding: 0.5em 1em;
+        margin: 0 0.5em;
+        cursor: pointer;
+        transition: all 500ms ease-in-out;
+        text-transform: uppercase;
+    }
+    div[data-namespace="dialog-mask"] button:hover {
+        background: #555;
+        color: #eee;
+    }
