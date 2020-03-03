@@ -3,7 +3,9 @@
  * CSS namespace test
  * if we specify a namespace at an upper level of DOM structure ....
  **********************************************************************/
- div[data-namespace="dialog-mask"] {
+@charset "utf-8";
+
+div[data-namespace="dialog-mask"] {
 	position: fixed;
 	top: 0;
 	bottom: 0;
