@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Canvas Test</title>
+        <meta charset="utf-8">
+        
+        <style>
+            body { padding: 2em; }
+            canvas {
+                border: solid 1px #eee;
+                width: 100%;
+                height: 1px;
+            }
+            p { margin-bottom: 0; }
+        </style>
+    </head>
+
+    <body>
+        <p>Test 1: <span id="gauge1"></span></p>
+        <canvas id="mycanvas1" width="100" height="1"></canvas>
+        <p>Test 2: <span id="gauge2"></span></p>
+        <canvas id="mycanvas2" width="100" height="1"></canvas>
+    
+    
+        
+<script>
+/**********************************************************************
+ * file:        gauge-me.js
+ * date:        6th March 2020
+ * modified:
+ * written by:  KotaroW
+ * description:
+ *      see how it works at gauge-test.html .... this file
+**********************************************************************/
+    
+
+class GaugeMe {
+    
+    // default gauge colour. change it if you wish
+    static get DEFAULT_COLOUR() { return "#369"; }
+    static get PERCENTAGE_STEP() { return 0.1; }
+    static get INTERVAL()    { return 0.5; }
+    
+    constructor(canvasId, percentage, colour, displayElementId) {
+        this.canvas = this.getCanvas(canvasId);
+        this.percentage = !isNaN(parseInt(percentage)) ? percentage : 0;
+        this.colour = colour ? colour : GaugeMe.DEFAULT_COLOUR;
+        this.displayElement = document.getElementById(displayElementId) ? document.getElementById(displayElementId) : null;
+        this.currentPercentage = 0;
+        // recursion tracker (setTimeout)
+        this.timer = null;
+    }
+    
+    getCanvas (canvasId) {
+        var canvas = document.getElementById(canvasId);
+        canvas = (canvas && canvas.constructor.name.toLowerCase() == "htmlcanvaselement") ? canvas : null;
+        return canvas;
+    }
+    
+    // draws the line
+    gauge (that) {
+        if (!that) {
+            that = this;
+        }
+        
+        if ((that.percentage - that.currentPercentage) < 0.0001 ) {
+            if (that.timer) {
+                window.clearTimeout(that.timer);
+            }
+            return;
+        }
+        
+        that.currentPercentage += GaugeMe.PERCENTAGE_STEP;
+        
+        if (that.displayElement) {
+            that.displayElement.textContent = that.currentPercentage.toFixed(2) + "%";
+        }
+        
+        var width = (that.canvas.getAttribute("width")) / 100 * that.currentPercentage;
+        
+        var context = that.canvas.getContext("2d");
+        context.beginPath();
+        context.fillStyle = that.colour;
+        context.fillRect(0, 0, width, 1);
+        
+        that.timer = setTimeout(
+            function () {
+                that.gauge(that);
+            },
+            GaugeMe.INTERVAL
+        );
+    }
+    
+    // no longer needed
+    static adjustWidth(baseElement) {
+        baseElement = (baseElement && baseElement.__proto__.__proto__.constructor.name.toLowerCase() == 'htmlelement') ? baseElement : document.body;
+        
+        var canvases = document.querySelectorAll("canvas");
+        canvases = (canvases && canvases.constructor.name.toLowerCase() == "nodelist") ? Array.prototype.slice.call(canvases) : null;
+        
+        canvases.forEach(
+            function (canvas) {
+                var baseWidth = parseInt(window.getComputedStyle(baseElement).getPropertyValue("width"));
+                canvas.setAttribute("width", baseWidth);
+            }
+        );
+    }
+}
+    
+    
+/***** Run test *****/
+var gauge1 = new GaugeMe("mycanvas1", 90, "orange", "gauge1");
+gauge1.gauge();
+
+var gauge2 = new GaugeMe("mycanvas2", 50, null, "gauge2");
+gauge2.gauge();
+//GaugeMe.adjustWidth();    
+/*
+    window.addEventListener(
+    "resize",
+    function () {
+        GuageMe.adjustWidth();
+    },
+    false
+);    
+*/
+</script>
+    
+    </body>
+
+</html>
